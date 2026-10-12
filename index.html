@@ -33,22 +33,23 @@ body{color:var(--paper);font-family:var(--f);font-weight:500;-webkit-user-select
 .ttl{margin:0;font-size:44px;font-weight:800;text-shadow:0 3px 0 rgba(0,0,0,.5)}
 .hint{margin:0;font-size:20px;color:var(--paper-2);pointer-events:none}
 .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.btn{font:800 24px/1 var(--f);color:var(--ink);background:var(--paper);border:0;border-radius:12px;padding:14px 28px;min-width:150px;box-shadow:0 5px 0 var(--paper-2),0 9px 18px rgba(0,0,0,.4);cursor:pointer}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:calc(46px / var(--s,1));touch-action:manipulation;font:800 24px/1 var(--f);color:var(--ink);background:var(--paper);border:0;border-radius:12px;padding:14px 28px;min-width:150px;box-shadow:0 5px 0 var(--paper-2),0 9px 18px rgba(0,0,0,.4);cursor:pointer}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--paper-2)}
 .btn.red{background:var(--red);color:#fff;box-shadow:0 5px 0 var(--red-2),0 9px 18px rgba(0,0,0,.4)}
 .btn.red:active{box-shadow:0 1px 0 var(--red-2)}
-.btn.sm{font-size:18px;padding:10px 18px;min-width:0}
+.btn.sm{font-size:19px;padding:10px 20px;min-width:0;min-height:calc(40px / var(--s,1))}
+.btn::after,.seg button::after,#b-pause::after{content:'';position:absolute;left:-6px;right:-6px;top:-8px;bottom:-8px}
 .btn:disabled{opacity:.4;cursor:default}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .seg{display:flex;gap:8px}
-.seg button{font:800 20px/1 var(--f);color:var(--paper);background:rgba(244,234,210,.12);border:2px solid rgba(244,234,210,.35);border-radius:999px;padding:10px 24px;cursor:pointer}
+.seg button{position:relative;min-height:calc(40px / var(--s,1));touch-action:manipulation;font:800 20px/1 var(--f);color:var(--paper);background:rgba(244,234,210,.12);border:2px solid rgba(244,234,210,.35);border-radius:999px;padding:10px 24px;cursor:pointer}
 .seg button.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
 .corner{position:absolute;left:24px;top:16px;font-size:16px;opacity:.6;pointer-events:none}
 .tgs{position:absolute;right:20px;top:14px;display:flex;gap:10px}
 #stage-rows{display:flex;flex-direction:column;gap:14px;align-items:center}
 .chap{margin:0 0 6px;font-weight:800;font-size:20px;color:var(--gold);letter-spacing:.3em}
 .nodes{display:flex;gap:14px;justify-content:center}
-.node{width:150px;padding:12px 8px;border:0;border-radius:12px;background:var(--paper);color:var(--ink);font:800 20px/1.25 var(--f);cursor:pointer;box-shadow:0 5px 0 var(--paper-2)}
+.node{position:relative;touch-action:manipulation;width:150px;padding:12px 8px;border:0;border-radius:12px;background:var(--paper);color:var(--ink);font:800 20px/1.25 var(--f);cursor:pointer;box-shadow:0 5px 0 var(--paper-2)}
 .node small{display:block;font:500 15px/1.4 var(--f);opacity:.75}
 .node .st{display:block;color:var(--red);font-size:20px;letter-spacing:.1em;margin-top:2px;min-height:24px}
 .node:disabled{background:#3a3d4f;color:#8b8fa3;box-shadow:0 5px 0 #2a2c3a;cursor:default}
@@ -65,21 +66,53 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 #h-boss{left:50%;top:62px;transform:translateX(-50%);width:380px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
 #h-boss .bar{flex:1;height:16px;border-radius:8px;background:rgba(0,0,0,.45);overflow:hidden;border:2px solid var(--paper)}
 #h-boss i{display:block;height:100%;width:100%;background:var(--red)}
-#b-pause{right:22px;top:12px;width:54px;height:46px;border:0;border-radius:10px;background:rgba(244,234,210,.2);color:var(--paper);font:800 18px/1 var(--f);pointer-events:auto;cursor:pointer}
+#b-pause{right:22px;top:12px;width:max(54px,calc(44px / var(--s,1)));height:max(46px,calc(44px / var(--s,1)));touch-action:manipulation;border:0;border-radius:10px;background:rgba(244,234,210,.2);color:var(--paper);font:800 18px/1 var(--f);pointer-events:auto;cursor:pointer}
 #b-skill{right:34px;bottom:44px;width:112px;height:112px;border-radius:50%;border:0;padding:0;background:conic-gradient(var(--gold) calc(var(--g,0)*1%),rgba(244,234,210,.22) 0);pointer-events:auto;cursor:pointer;font:800 26px/1 var(--f);color:var(--paper)}
 #b-skill span{position:absolute;inset:9px;border-radius:50%;background:var(--ink-2);display:flex;align-items:center;justify-content:center}
 #b-skill.ready span{background:var(--red);color:#fff}
 #b-skill.ready{animation:pulse .9s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.08)}}
+#sc-result{gap:10px}
 #r-stars{font-size:64px;line-height:1;color:var(--gold);letter-spacing:.1em;min-height:66px}
 #r-stars span{display:inline-block;opacity:0;animation:pop .45s ease-out forwards}
 #r-stars span.off{color:rgba(244,234,210,.28)}
 @keyframes pop{from{transform:scale(2.2);opacity:0}to{transform:scale(1);opacity:1}}
 #r-score{font:800 56px/1 var(--f);font-variant-numeric:tabular-nums}
-input{font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0;border-radius:10px;padding:10px 16px;width:220px;text-align:center;-webkit-user-select:text;user-select:text;pointer-events:auto}
+input{box-sizing:border-box;min-height:calc(46px / var(--s,1));font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0;border-radius:10px;padding:10px 16px;width:260px;text-align:center;-webkit-user-select:text;user-select:text;pointer-events:auto}
 #card-img{height:330px;max-width:90%;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.6);-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto;pointer-events:auto}
 #rotate{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--ink);color:var(--paper);font-size:24px;font-weight:800;text-align:center;padding:24px}
 @media (orientation:portrait){#rotate{display:flex}}
+.coinline{color:var(--gold);font-weight:800}
+.topbar{display:flex;align-items:center;justify-content:space-between;width:880px;gap:16px}
+.topbar .ttl{font-size:40px}
+.topbar .btn{min-width:120px}
+.coin{font:800 26px/1 var(--f);color:var(--gold);min-width:150px;text-align:right;font-variant-numeric:tabular-nums}
+.shop-body{display:flex;gap:20px;align-items:flex-start;width:880px}
+.shop-l{width:250px;flex:none;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+#pv{width:250px;height:190px;border-radius:12px;display:block}
+.detail{min-height:62px;text-align:center}
+.detail b{display:block;font-size:22px}
+.detail span{font-size:15px;color:var(--paper-2);line-height:1.4}
+#sh-act{min-width:0;width:100%}
+#sh-grid{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start}
+#sh-grid.sk{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:calc(56px / var(--s,1));padding:10px 6px;border:3px solid transparent;border-radius:12px;background:var(--paper);color:var(--ink);font:800 20px/1.1 var(--f);cursor:pointer;touch-action:manipulation;box-shadow:0 4px 0 var(--paper-2)}
+.card small{font:500 15px/1 var(--f);opacity:.75}
+.card .pp{color:var(--red);letter-spacing:.12em;font-size:17px}
+.card.sel{border-color:var(--gold);background:#fff6d8}
+.card .sw{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);display:block}
+.bd-mode{display:flex;align-items:center;gap:16px}
+.bd-mode b{min-width:300px;font-size:24px;color:var(--gold)}
+.bd-mode .btn{min-width:calc(56px / var(--s,1))}
+#bd-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,400px);grid-template-rows:repeat(5,44px);grid-auto-flow:column;gap:6px 24px;pointer-events:none}
+#bd-list li{display:flex;align-items:center;gap:12px;padding:0 14px;border-radius:10px;background:rgba(244,234,210,.1);font:800 22px/1 var(--f)}
+#bd-list li.empty{opacity:.45}
+#bd-list li.me{background:var(--gold);color:var(--ink);opacity:1}
+#bd-list .rk{width:30px;text-align:center;color:var(--gold)}
+#bd-list li.me .rk{color:var(--red-2)}
+#bd-list .nm{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#bd-list .sc{font-variant-numeric:tabular-nums}
+#n-score{font:800 30px/1 var(--f);color:var(--gold)}
 @media (prefers-reduced-motion:reduce){#r-stars span{animation:none;opacity:1}#b-skill.ready{animation:none}}
 [hidden]{display:none!important}
 </style>
@@ -96,11 +129,15 @@ input{font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0
     <button class="btn red" id="b-quest">挑戰關卡</button>
     <button class="btn" id="b-train">修行模式</button>
   </div>
+  <div class="row">
+    <button class="btn" id="b-shop">忍具店</button>
+    <button class="btn" id="b-board">排行榜</button>
+  </div>
   <div class="seg" id="seg-diff" role="group" aria-label="難度">
     <button data-d="easy">小忍者</button><button data-d="normal">忍者</button><button data-d="hard">上忍</button>
   </div>
   <p class="hint">用手指劃過水果。小心炸彈和手裡劍！</p>
-  <div class="corner">v0.1</div>
+  <div class="corner" id="t-ver">v0.3</div>
   <div class="tgs"><button class="btn sm tg-mute"></button><button class="btn sm tg-eco"></button></div>
 </section>
 
@@ -126,7 +163,7 @@ input{font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0
   <div id="r-stars"></div>
   <div id="r-score"></div>
   <p class="hint" id="r-sub"></p>
-  <input id="r-name" maxlength="8" placeholder="忍者名字" autocomplete="off">
+  <p class="hint coinline" id="r-coins"></p>
   <div class="row">
     <button class="btn red" id="r-again">再來一次</button>
     <button class="btn" id="r-next">下一關 ›</button>
@@ -134,6 +171,8 @@ input{font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0
   <div class="row">
     <button class="btn sm" id="r-card">紀念卡</button>
     <button class="btn sm" id="r-stages">選關</button>
+    <button class="btn sm" id="r-shop">忍具店</button>
+    <button class="btn sm" id="r-board">排行榜</button>
     <button class="btn sm" id="r-menu">主選單</button>
   </div>
 </section>
@@ -142,6 +181,43 @@ input{font:800 26px/1 var(--f);color:var(--ink);background:var(--paper);border:0
   <img id="card-img" alt="紀念卡">
   <p class="hint">長按圖片，存到相簿</p>
   <button class="btn sm" id="card-close">關閉</button>
+</section>
+
+<section class="screen dim" id="sc-name" hidden>
+  <h2 class="ttl" id="n-title"></h2>
+  <div id="n-score"></div>
+  <p class="hint">幫自己取個忍者名字：按「骰一個」，或自己打字</p>
+  <input id="n-name" maxlength="8" placeholder="忍者名字" autocomplete="off" enterkeyhint="done">
+  <div class="row">
+    <button class="btn" id="n-dice">骰一個</button>
+    <button class="btn red" id="n-ok">留名</button>
+  </div>
+  <button class="btn sm" id="n-skip">這次不留名</button>
+</section>
+
+<section class="screen dim" id="sc-shop" hidden>
+  <div class="topbar"><button class="btn sm" id="sh-back">‹ 返回</button><h2 class="ttl">忍具店</h2><div class="coin" id="sh-coin"></div></div>
+  <div class="seg" id="sh-tabs" role="group" aria-label="商品">
+    <button data-t="gear" class="on">能力</button><button data-t="band">頭巾</button><button data-t="trail">刀光</button>
+  </div>
+  <div class="shop-body">
+    <div class="shop-l">
+      <canvas id="pv" width="500" height="380"></canvas>
+      <div id="sh-detail" class="detail"></div>
+      <button class="btn red" id="sh-act">升級</button>
+    </div>
+    <div id="sh-grid"></div>
+  </div>
+</section>
+
+<section class="screen dim" id="sc-board" hidden>
+  <div class="topbar"><button class="btn sm" id="bd-back">‹ 返回</button><h2 class="ttl">排行榜</h2><div class="coin"></div></div>
+  <div class="seg" id="bd-diff" role="group" aria-label="難度">
+    <button data-d="easy">小忍者</button><button data-d="normal">忍者</button><button data-d="hard">上忍</button>
+  </div>
+  <div class="bd-mode"><button class="btn sm" id="bd-prev" aria-label="上一個">‹</button><b id="bd-mode"></b><button class="btn sm" id="bd-next" aria-label="下一個">›</button></div>
+  <ol id="bd-list"></ol>
+  <p class="hint" id="bd-none">這裡還沒有紀錄，去挑戰看看！（排行榜只記錄在這支手機）</p>
 </section>
 
 <div id="hud" hidden>
@@ -177,6 +253,7 @@ function layout(){
   const T2=(sa&&!T)?8:T,B2=(sa&&!B)?14:B;
   const aw=Math.max(100,innerWidth-L-R),ah=Math.max(100,innerHeight-T-B);
   S=Math.min(aw/W,ah/H);
+  stage.style.setProperty('--s',S.toFixed(4));
   stage.style.transform='translate('+(L+(aw-W*S)/2)+'px,'+(T2+(ah-H*S)/2)+'px) scale('+S+')';
   K=Math.min(S*Math.min(2,devicePixelRatio||1),2);
   cv.width=Math.round(W*K);cv.height=Math.round(H*K);
@@ -186,8 +263,8 @@ function layout(){
 
 /* ----- save ----- */
 const SAVE_KEY='ninja-fruit-v1';
-let save={diff:'normal',name:'',stage:{},train:{easy:0,normal:0,hard:0},sliced:0,eco:false,mute:false};
-try{const r=localStorage.getItem(SAVE_KEY);if(r){const o=JSON.parse(r);save=Object.assign(save,o);save.train=Object.assign({easy:0,normal:0,hard:0},save.train||{});save.stage=save.stage||{};}}catch(e){}
+let save={diff:'normal',name:'',stage:{},train:{easy:0,normal:0,hard:0},sliced:0,eco:false,mute:false,coins:0,gear:{},owned:{band:['red'],trail:['gold']},equip:{band:'red',trail:'gold'},lb:{}};
+try{const r=localStorage.getItem(SAVE_KEY);if(r){const o=JSON.parse(r);save=Object.assign(save,o);save.train=Object.assign({easy:0,normal:0,hard:0},save.train||{});save.stage=save.stage||{};save.gear=save.gear||{};save.lb=save.lb||{};save.coins=+save.coins||0;save.owned=Object.assign({band:['red'],trail:['gold']},save.owned||{});save.equip=Object.assign({band:'red',trail:'gold'},save.equip||{});}}catch(e){}
 function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch(e){}}
 
 /* ----- audio (all synthesized) ----- */
@@ -373,7 +450,7 @@ function bgPond(g){
   for(let i=0;i<7;i++){const x=40+R()*880,y=380+R()*140;g.fillStyle='#3f8a4c';g.beginPath();g.ellipse(x,y,46,12,0,0,7);g.fill();g.fillStyle='#2c6a3a';g.beginPath();g.ellipse(x,y+3,46,10,0,0,Math.PI);g.fill()}
   for(const x of[40,95,870,925]){g.strokeStyle='#3a5a3a';g.lineWidth=4;g.beginPath();g.moveTo(x,H);g.lineTo(x+8,250+(x%60));g.stroke();g.fillStyle='#6a4a2a';g.beginPath();g.ellipse(x+8,244+(x%60),7,22,0,0,7);g.fill()}
 }
-function drawNinja(g,x,y,t,sl){
+function drawNinja(g,x,y,t,sl,bc){bc=bc||bandColor();
   g.save();g.translate(x,y);
   const bob=Math.sin(t*3)*2,lean=sl>0?-.18:0;
   g.rotate(lean);
@@ -382,10 +459,10 @@ function drawNinja(g,x,y,t,sl){
   g.beginPath();g.arc(0,-72+bob,21,0,7);g.fill();
   g.fillStyle='#f3d9b4';rr(g,-15,-79+bob,30,13,6);g.fill();
   g.fillStyle='#161826';g.beginPath();g.ellipse(-6,-72.5+bob,2.6,3,0,0,7);g.ellipse(6,-72.5+bob,2.6,3,0,0,7);g.fill();
-  g.fillStyle='#e0452f';g.fillRect(-21,-87+bob,42,7);
-  g.strokeStyle='#e0452f';g.lineWidth=6;g.lineCap='round';
+  g.fillStyle=bc;g.fillRect(-21,-87+bob,42,7);
+  g.strokeStyle=bc;g.lineWidth=6;g.lineCap='round';
   g.beginPath();g.moveTo(-20,-84+bob);g.quadraticCurveTo(-38,-80+Math.sin(t*6)*6+bob,-50,-70+Math.sin(t*6+1)*8+bob);g.stroke();
-  g.fillStyle='#e0452f';g.fillRect(-14,-54+bob,28,6);
+  g.fillStyle=bc;g.fillRect(-14,-54+bob,28,6);
   if(sl>0){
     g.strokeStyle='#161826';g.lineWidth=9;g.beginPath();g.moveTo(14,-44);g.lineTo(34,-62);g.stroke();
     g.strokeStyle='rgba(255,255,255,'+Math.min(1,sl*5)+')';g.lineWidth=5;g.beginPath();g.arc(30,-70,44,-1.1,.5);g.stroke();
@@ -437,7 +514,7 @@ function unlocked(i){return i===0||location.hash==='#test'||((save.stage[i-1]&&s
 
 function resetRun(si){
   const d=DIFF[save.diff];
-  Object.assign(G,{run:'play',si,diff:save.diff,score:0,maxHearts:d.hearts,hearts:d.hearts,time:si===-1?60:45,gauge:0,sliced:0,slow:0,dbl:0,
+  Object.assign(G,{run:'play',si,diff:save.diff,score:0,maxHearts:d.hearts+gl('amulet'),hearts:d.hearts+gl('amulet'),time:(si===-1?60:45)+gl('glass')*3,rank:0,coins:0,gauge:0,sliced:0,slow:0,dbl:0,
     spawnT:.8,ready:1.3,shake:0,flash:0,slash:0,toadHit:0,toadOpen:0,spitT:2.2,spitQ:0,bossDown:false,endT:0,lost:0,win:false,stars:0,shown:1,target:0,best:0,newBest:false,reason:''});
   const st=curStage();
   if(st&&st.boss){G.bossMax=G.bossHp=d.boss;G.time=Infinity}
@@ -495,7 +572,7 @@ function slashSeg(a,b,p){
   if(G.run==='pause'||(G.run==='play'&&G.ready>0))return;
   if(Math.hypot(b.x-a.x,b.y-a.y)<4)return;
   const ang=Math.atan2(b.y-a.y,b.x-a.x);
-  for(const o of objs){if(!o.dead&&segDist(o.x,o.y,a.x,a.y,b.x,b.y)<=o.r+4)sliceObj(o,ang,p)}
+  for(const o of objs){if(!o.dead&&segDist(o.x,o.y,a.x,a.y,b.x,b.y)<=o.r+4+gl('blade')*3)sliceObj(o,ang,p)}
 }
 function sliceObj(o,ang,p){
   o.dead=true;const d=o.def,playing=G.run==='play';
@@ -506,8 +583,8 @@ function sliceObj(o,ang,p){
   const mul=G.dbl>0?2:1;let pts=(d.gold?50:10)*mul;
   if(p.n>=2){pts+=10*(p.n-1)*mul;pop(o.x,o.y-34,'連切 ×'+p.n,'#f0bd3c',30);sfxCombo(p.n)}
   G.score+=pts;pop(o.x,o.y,'+'+pts,d.gold?'#f0bd3c':'#ffffff',d.gold?32:24);
-  G.gauge=Math.min(100,G.gauge+(d.gold?20:7)+(p.n>1?3:0));
-  if(d.ice){G.slow=3;pop(o.x,o.y-34,'凍結！','#9fdcf2',32);sfxIce()}
+  G.gauge=Math.min(100,G.gauge+((d.gold?20:7)+(p.n>1?3:0))*(1+.15*gl('scroll')));
+  if(d.ice){G.slow=3+gl('ice');pop(o.x,o.y-34,'凍結！','#9fdcf2',32);sfxIce()}
   if(d.gold)sfxGold();
   G.sliced++;save.sliced++;
   if(G.sliced%67===0)egg();
@@ -545,6 +622,11 @@ function finish(reason){
   else if(st.boss){win=reason==='boss';if(win)stars=G.lost===0?3:(G.lost<=2?2:1)}
   else{const tg=G.target;win=G.score>=tg;if(win)stars=G.score>=tg*1.5?3:(G.score>=tg*1.25?2:1)}
   G.win=win;G.stars=stars;G.reason=reason;G.run='ending';G.endT=0;G.shown=0;
+  {const dm={easy:.8,normal:1,hard:1.5}[G.diff]||1,rec0=G.si>=0?save.stage[G.si]:null,first=!(rec0&&rec0.stars>0);
+   let c;if(G.si===-1)c=Math.floor(G.score/15);
+   else if(win)c=30+Math.floor(G.score/8)+stars*25+(first?80:0)+(st&&st.boss?150:0);
+   else c=Math.floor(G.score/20);
+   c=Math.round(c*dm*(1+.1*gl('purse')));G.coins=c;save.coins=(save.coins||0)+c}
   if(G.si===-1){G.best=save.train[G.diff]||0;G.newBest=G.score>G.best;if(G.newBest)save.train[G.diff]=G.score}
   else{
     const rec=save.stage[G.si]||(save.stage[G.si]={stars:0,best:{}});
@@ -597,6 +679,204 @@ function playUpdate(dt){
     if(G.spitQ>0){G.spitQ-=dt;if(G.spitQ<=0)spitFruits()}
   }
 }
+/* ===== economy: coins, gear, skins, names, leaderboard ===== */
+const NAMES=["忍見忍愛", "忍山忍海", "忍來忍往", "忍生如戲", "忍面桃花", "忍定勝天", "忍中之龍", "忍小鬼大", "忍云亦云", "忍外有忍", "忍仰馬翻", "忍心惶惶", "忍才輩出", "忍模忍樣", "忍氣十足", "忍多勢眾", "忍盡皆知", "忍不可貌相", "忍間蒸發", "忍來瘋", "忍魚公主", "忍言可畏", "忍盡其才", "忍之常情", "忍各有志", "忍傑地靈", "忍財兩得", "忍生地不熟", "忍浮於事", "忍和萬事興", "忍間有愛", "忍間煙火", "忍間四月天", "忍工智慧", "忍體工學", "忍造衛星", "忍民英雄", "忍品爆發", "忍設不倒", "忍生勝利組", "忍生贏家", "忍面獅身", "忍參果", "忍參雞湯", "忍行道", "忍字拖", "忍事全非", "忍靠衣裝", "忍馬座", "忍魚線", "一視同忍", "忍至義盡", "忍者仁心", "杏忍豆腐", "杏忍茶", "花生忍", "瓜子忍", "薏忍湯圓", "蝦忍燒賣", "蝦忍蛋炒飯", "忍真負責", "忍真切水果", "忍真過頭", "勇於忍錯", "死不忍輸", "忍得出來", "忍同感", "官方忍證", "忍養一隻貓", "大家都忍可", "忍重道遠", "忍務完成", "忍性十足", "忍我行", "忍意門", "忍意切", "忍勞忍怨", "忍憑風浪起", "忍期屆滿", "責忍重大", "信忍度滿點", "班主忍來了", "新官上忍", "走馬上忍", "游忍有餘", "迎忍而解", "忍性超強", "忍不住", "忍不住笑", "忍不住切", "忍不住又切", "忍不住想睡", "忍不住餓", "忍無可忍", "忍俊不禁", "忍辱負重", "忍氣吞聲", "忍耐力滿格", "忍冬花", "堅忍不拔", "容忍度", "忍痛割愛", "忍痛切下", "忍者歸來", "忍者出擊", "忍者集合", "忍者日常", "忍者學校", "忍者修行中", "忍者見習生", "忍者小隊長", "忍者大師兄", "忍了又忍", "再忍一下", "忍忍看", "忍忍就過", "忍你沒商量", "忍到最後", "忍一時風平浪靜", "忍一刀海闊天空", "小不忍則亂大謀", "百忍成金", "忍為貴", "忍者萬歲", "忍者加油", "忍者必勝", "忍術大師", "耐忍尋味", "發忍深省", "令忍期待", "引忍入勝", "迷忍小忍者", "感忍肺腑", "驚忍的速度", "嚇忍一跳", "路忍甲", "路忍乙", "路忍丙", "切果達忍", "超忍快遞", "高忍一等", "老忍家", "小忍物", "大忍物", "好忍卡", "情忍節", "新忍報到", "閒忍勿近", "閒雜忍等", "忍偶劇", "忍潮洶湧", "不見忍影", "忍臉辨識", "忍形立牌", "主忍好", "客忍請坐", "旅忍", "巨忍", "偉忍傳", "過來忍", "家忍團聚", "忍類之光", "桃忍太郎", "浦島忍太郎", "金忍太郎", "一寸忍師", "忍太郎", "忍次郎", "忍三郎", "忍之介", "忍丸", "忍之助", "小忍丸", "忍者龜速", "忍者貓步", "忍者柴犬", "忍者喵喵", "壽司忍者", "飯糰忍者", "章魚燒忍者", "抹茶忍者", "麻糬忍者", "布丁忍者", "珍奶忍者", "雞排忍者", "蔥油餅忍者", "西瓜忍者", "蘋果忍者", "芒果忍者", "鳳梨忍者", "荔枝忍者", "葡萄忍者", "榴槤忍者", "檸檬忍者", "橘子忍者", "草莓忍者", "柿子忍者", "熊貓忍者", "企鵝忍者", "小雞忍者", "蝸牛忍者", "青蛙忍者", "河馬忍者", "章魚忍者", "鯊魚忍者", "小鴨忍者", "兔兔忍者", "刺蝟忍者", "柴柴忍者", "無尾熊忍者", "水豚忍者", "忍不住切西瓜", "忍不住吃糰子", "忍不住剝橘子", "本忍在此", "本忍來也", "忍者本忍", "有忍來了", "忍在江湖", "忍已至此", "忍你千百遍", "忍者不吃素", "忍讓三分", "忍者貓咪", "忍者哈哈哈", "忍者嘻嘻嘻", "隱忍高手", "忍者本色", "忍者風範", "忍者一點通", "忍者萬能", "忍術速成班", "忍者補習班", "忍者外送員", "忍者快遞", "忍者店長", "忍者便利店", "忍者早餐店", "忍者冰淇淋", "忍者泡泡糖", "忍者棒棒糖", "忍者小饅頭", "忍者小湯圓", "忍者大福", "忍者蛋捲", "忍者獨角獸", "忍者小恐龍", "忍者機器人", "忍者太空人", "忍者消防員"];
+const GEAR=[
+  {id:'blade',name:'鋒利忍刀',desc:'切中範圍變大，更容易切到',max:5,cost:[80,160,300,500,800]},
+  {id:'amulet',name:'護身符',desc:'每次出戰多 1 顆愛心',max:3,cost:[150,350,700]},
+  {id:'glass',name:'忍者沙漏',desc:'限時關卡多 3 秒',max:5,cost:[100,200,350,550,800]},
+  {id:'scroll',name:'忍術卷軸',desc:'氣力集得更快，忍術更常用',max:5,cost:[100,200,350,550,800]},
+  {id:'ice',name:'冰霜符',desc:'冰塊的慢動作多 1 秒',max:3,cost:[100,250,500]},
+  {id:'purse',name:'招財錢袋',desc:'過關金幣多 10%',max:5,cost:[120,240,420,650,900]}
+];
+const BANDS=[
+  {id:'red',name:'赤紅',col:'#e0452f',cost:0},{id:'blue',name:'靛藍',col:'#3f6fe0',cost:100},
+  {id:'green',name:'竹青',col:'#3fae6a',cost:100},{id:'pink',name:'櫻粉',col:'#f48fb1',cost:150},
+  {id:'white',name:'雪白',col:'#f4ead2',cost:150},{id:'purple',name:'紫藤',col:'#9a5fd1',cost:200},
+  {id:'gold',name:'金黃',col:'#f0bd3c',cost:300}
+];
+const TRAILS=[
+  {id:'gold',name:'白金',glow:[240,189,60],cost:0},{id:'fire',name:'火焰',glow:[255,106,47],cost:200},
+  {id:'ice',name:'冰藍',glow:[111,211,255],cost:200},{id:'sakura',name:'櫻花',glow:[255,143,184],cost:250},
+  {id:'jade',name:'翡翠',glow:[76,217,138],cost:250},{id:'thunder',name:'雷紫',glow:[181,140,255],cost:300},
+  {id:'rainbow',name:'彩虹',glow:null,cost:500}
+];
+const gl=id=>(save.gear&&save.gear[id])||0;
+const bandOf=id=>BANDS.find(b=>b.id===id)||BANDS[0];
+const trailOf=id=>TRAILS.find(t=>t.id===id)||TRAILS[0];
+const bandColor=()=>bandOf(save.equip.band).col;
+function hsl2rgb(h,s,l){h/=360;const f=n=>{const k=(n+h*12)%12,a=s*Math.min(l,1-l);return l-a*Math.max(-1,Math.min(k-3,9-k,1))};return[f(0)*255,f(8)*255,f(4)*255]}
+function trailRGB(id,k,time){
+  const t=trailOf(id);let c=t.glow;if(!c)c=hsl2rgb((time*140+k*260)%360,1,.62);
+  return Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2]);
+}
+function coreRGB(s){return s.split(',').map(v=>Math.round(+v+(255-v)*.85)).join(',')}
+function randomName(avoid){let n;do{n=pick(NAMES)}while(n===avoid&&NAMES.length>1);return n}
+const itemOf=(tab,id)=>(tab==='gear'?GEAR:tab==='band'?BANDS:TRAILS).find(x=>x.id===id);
+
+/* ----- leaderboard (this device only) ----- */
+const lbKey=(si,d)=>si+':'+d;
+const lbList=(si,d)=>save.lb[lbKey(si,d)]||[];
+function lbRank(si,d,score){
+  if(score<=0)return 0;let r=1;
+  for(const e of lbList(si,d)){if(e.s>=score)r++;else break}
+  return r<=10?r:0;
+}
+let lastLbT=0;
+function lbAdd(si,d,name,score){
+  const k=lbKey(si,d),l=(save.lb[k]=save.lb[k]||[]),r=lbRank(si,d,score)||l.length+1;
+  const e={n:name,s:score,t:Date.now()};lastLbT=e.t;
+  l.splice(r-1,0,e);if(l.length>10)l.length=10;persist();return r;
+}
+function modeName(si){
+  if(si===-1)return '修行模式';
+  const s=STAGES[si];return s.boss?'魔王戰　'+s.name:'第 '+(si+1)+' 關　'+s.name;
+}
+
+/* ----- result flow: name entry first when the score makes the board ----- */
+function showResult(){
+  showHUD(false);G.rank=0;
+  const r=lbRank(G.si,G.diff,G.score);
+  if(r>0)showNameEntry(r);else renderResult();
+}
+function showNameEntry(rank){
+  $('n-title').textContent=rank===1?'新紀錄！榜上第 1 名':'進榜了！第 '+rank+' 名';
+  $('n-score').textContent=G.score+' 分　'+modeName(G.si)+'　'+DIFF[G.diff].name;
+  $('n-name').value=save.name||randomName();
+  showScreen('sc-name');
+}
+function rollName(){
+  const inp=$('n-name');let i=0;
+  const tick=()=>{inp.value=randomName(inp.value);if(++i<7)setTimeout(tick,40+i*14)};tick();
+}
+function confirmName(){
+  const nm=($('n-name').value||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,8)||randomName();
+  save.name=nm;G.rank=lbAdd(G.si,G.diff,nm,G.score);persist();renderResult();
+}
+function setCoinLine(){$('r-coins').textContent='+'+(G.coins||0)+' 金幣　共 '+save.coins+' 金幣'}
+function refreshCoins(){
+  const t=$('t-ver');if(t)t.textContent='v0.3　金幣 '+save.coins;
+  const c=$('sh-coin');if(c)c.textContent='金幣 '+save.coins;
+}
+
+/* ----- shop ----- */
+let shopTab='gear',shopFrom='sc-title';
+const shopSel={gear:'blade',band:'red',trail:'gold'};
+function openShop(from){
+  shopFrom=from;shopTab='gear';shopSel.gear='blade';shopSel.band=save.equip.band;shopSel.trail=save.equip.trail;
+  renderShop();showScreen('sc-shop');
+}
+const pips=(n,m)=>'●'.repeat(n)+'○'.repeat(m-n);
+function swatch(it){
+  if(it.col)return it.col;
+  if(it.glow)return 'rgb('+it.glow.join(',')+')';
+  return 'linear-gradient(135deg,#ff5a5a,#ffd54a,#5aff8a,#5ab4ff,#b58cff)';
+}
+function renderShop(){
+  document.querySelectorAll('#sh-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===shopTab));
+  const grid=$('sh-grid');grid.innerHTML='';grid.className=shopTab==='gear'?'':'sk';
+  const list=shopTab==='gear'?GEAR:(shopTab==='band'?BANDS:TRAILS);
+  for(const it of list){
+    const b=document.createElement('button');b.className='card'+(it.id===shopSel[shopTab]?' sel':'');b.dataset.id=it.id;
+    if(shopTab==='gear'){
+      const lv=gl(it.id);
+      b.innerHTML='<b>'+it.name+'</b><span class="pp">'+pips(lv,it.max)+'</span><small>'+(lv>=it.max?'已滿級':'Lv '+lv+' / '+it.max)+'</small>';
+    }else{
+      const owned=save.owned[shopTab].includes(it.id),eq=save.equip[shopTab]===it.id;
+      b.innerHTML='<i class="sw" style="background:'+swatch(it)+'"></i><b>'+it.name+'</b><small>'+(eq?'使用中':owned?'已擁有':it.cost+' 金幣')+'</small>';
+    }
+    grid.appendChild(b);
+  }
+  renderDetail();refreshCoins();
+}
+function renderDetail(){
+  const it=itemOf(shopTab,shopSel[shopTab]),act=$('sh-act'),d=$('sh-detail');
+  d.innerHTML='';const nm=document.createElement('b'),ds=document.createElement('span');
+  nm.textContent=it.name;d.appendChild(nm);d.appendChild(ds);
+  if(shopTab==='gear'){
+    const lv=gl(it.id);ds.textContent=it.desc+'（目前 Lv '+lv+'）';
+    if(lv>=it.max){act.textContent='已滿級';act.disabled=true}
+    else{const c=it.cost[lv];act.disabled=save.coins<c;act.textContent=(act.disabled?'金幣不夠　':'升級　')+c+' 金幣'}
+  }else{
+    ds.textContent=shopTab==='band'?'忍者頭巾的顏色':'滑動時的刀光顏色';
+    const owned=save.owned[shopTab].includes(it.id),eq=save.equip[shopTab]===it.id;
+    if(eq){act.textContent='使用中';act.disabled=true}
+    else if(owned){act.textContent='使用';act.disabled=false}
+    else{act.disabled=save.coins<it.cost;act.textContent=(act.disabled?'金幣不夠　':'購買　')+it.cost+' 金幣'}
+  }
+}
+function shopAct(){
+  audioInit();
+  const it=itemOf(shopTab,shopSel[shopTab]);
+  if(shopTab==='gear'){
+    const lv=gl(it.id);if(lv>=it.max)return;const c=it.cost[lv];if(save.coins<c)return;
+    save.coins-=c;save.gear[it.id]=lv+1;sfxGold();
+  }else{
+    if(!save.owned[shopTab].includes(it.id)){
+      if(save.coins<it.cost)return;save.coins-=it.cost;save.owned[shopTab].push(it.id);sfxGold();
+    }
+    save.equip[shopTab]=it.id;
+  }
+  persist();renderShop();
+}
+const pvc=$('pv'),pvg=pvc.getContext('2d');
+function drawPreview(t){
+  const g=pvg,PW=250,PH=190;
+  g.setTransform(2,0,0,2,0,0);
+  const q=g.createLinearGradient(0,0,0,PH);q.addColorStop(0,'#252a44');q.addColorStop(1,'#3b2535');
+  g.fillStyle=q;g.fillRect(0,0,PW,PH);g.fillStyle='#3a2418';g.fillRect(0,PH-24,PW,24);
+  const bId=shopTab==='band'?shopSel.band:save.equip.band,tId=shopTab==='trail'?shopSel.trail:save.equip.trail;
+  const ph=t%2.2;
+  g.save();g.translate(70,PH-20);g.scale(1.5,1.5);drawNinja(g,0,0,t,ph<.4?.2:0,bandOf(bId).col);g.restore();
+  const head=(t*1.1)%1.5,n=16,p=u=>[112+u*118,128-Math.sin(u*Math.PI)*84];
+  g.lineCap='round';
+  for(let i=1;i<n;i++){
+    const u0=head-(n-i+1)*.026,u1=head-(n-i)*.026;if(u0<0||u1>1)continue;
+    const a=p(u0),b=p(u1),al=i/n,rgb=trailRGB(tId,i/n,t);
+    g.strokeStyle='rgba('+rgb+','+(al*.4)+')';g.lineWidth=14*al+2;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();
+    g.strokeStyle='rgba('+coreRGB(rgb)+','+al+')';g.lineWidth=6*al+1;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();
+  }
+}
+
+/* ----- leaderboard screen ----- */
+let bdMode=-1,bdFrom='sc-title',bdDiff='normal';
+function openBoard(from,si){
+  bdFrom=from;bdDiff=save.diff;
+  if(typeof si==='number')bdMode=si;
+  renderBoard();showScreen('sc-board');
+}
+function renderBoard(){
+  document.querySelectorAll('#bd-diff button').forEach(b=>b.classList.toggle('on',b.dataset.d===bdDiff));
+  $('bd-mode').textContent=modeName(bdMode);
+  const l=lbList(bdMode,bdDiff),ol=$('bd-list');ol.innerHTML='';
+  for(let i=0;i<10;i++){
+    const e=l[i],li=document.createElement('li'),rk=document.createElement('span'),nm=document.createElement('span'),sc=document.createElement('span');
+    rk.className='rk';nm.className='nm';sc.className='sc';
+    rk.textContent=i+1;nm.textContent=e?e.n:'—';sc.textContent=e?e.s:'';
+    if(e&&e.t===lastLbT&&bdFrom==='sc-result')li.className='me';
+    if(!e)li.className+=' empty';
+    li.appendChild(rk);li.appendChild(nm);li.appendChild(sc);ol.appendChild(li);
+  }
+  $('bd-none').hidden=l.length>0;
+}
+function stepMode(d){const n=STAGES.length+1;bdMode=((bdMode+1+d+n)%n)-1;renderBoard()}
+
+/* ----- wiring ----- */
+$('b-shop').onclick=()=>{audioInit();openShop('sc-title')};
+$('b-board').onclick=()=>openBoard('sc-title');
+$('r-shop').onclick=()=>{audioInit();openShop('sc-result')};
+$('r-board').onclick=()=>openBoard('sc-result',G.si);
+$('sh-back').onclick=()=>{if(shopFrom==='sc-result')setCoinLine();showScreen(shopFrom)};
+$('bd-back').onclick=()=>showScreen(bdFrom);
+$('sh-tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;shopTab=b.dataset.t;renderShop()});
+$('sh-grid').addEventListener('click',e=>{const c=e.target.closest('.card');if(!c)return;shopSel[shopTab]=c.dataset.id;renderShop()});
+$('sh-act').onclick=shopAct;
+$('bd-diff').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;bdDiff=b.dataset.d;renderBoard()});
+$('bd-prev').onclick=()=>stepMode(-1);
+$('bd-next').onclick=()=>stepMode(1);
+$('n-dice').onclick=()=>{audioInit();rollName();sfxCombo(3)};
+$('n-ok').onclick=confirmName;
+$('n-skip').onclick=renderResult;
 /* ===== drawing ===== */
 function drawObj(o){
   const s=SPR[o.def.k],n=o.def.r+4;
@@ -619,9 +899,9 @@ function drawTrails(){
   for(const p of all){
     const a=p.pts.filter(q=>t-q.t<.22);if(a.length<2)continue;
     for(let i=1;i<a.length;i++){
-      const age=(t-a[i].t)/.22,al=1-age;
-      if(!save.eco){ctx.strokeStyle='rgba(240,189,60,'+(al*.35)+')';ctx.lineWidth=16*al+2;ctx.beginPath();ctx.moveTo(a[i-1].x,a[i-1].y);ctx.lineTo(a[i].x,a[i].y);ctx.stroke()}
-      ctx.strokeStyle='rgba(255,255,255,'+al+')';ctx.lineWidth=7*al+1;ctx.beginPath();ctx.moveTo(a[i-1].x,a[i-1].y);ctx.lineTo(a[i].x,a[i].y);ctx.stroke();
+      const age=(t-a[i].t)/.22,al=1-age;const rgb=trailRGB(save.equip.trail,i/a.length,t),core=coreRGB(rgb);
+      if(!save.eco){ctx.strokeStyle='rgba('+rgb+','+(al*.35)+')';ctx.lineWidth=16*al+2;ctx.beginPath();ctx.moveTo(a[i-1].x,a[i-1].y);ctx.lineTo(a[i].x,a[i].y);ctx.stroke()}
+      ctx.strokeStyle='rgba('+core+','+al+')';ctx.lineWidth=7*al+1;ctx.beginPath();ctx.moveTo(a[i-1].x,a[i-1].y);ctx.lineTo(a[i].x,a[i].y);ctx.stroke();
     }
   }
 }
@@ -707,17 +987,18 @@ function syncUI(){
   document.querySelectorAll('#seg-diff button').forEach(b=>b.classList.toggle('on',b.dataset.d===save.diff));
   document.querySelectorAll('.tg-mute').forEach(b=>b.textContent='音效：'+(save.mute?'關':'開'));
   document.querySelectorAll('.tg-eco').forEach(b=>b.textContent='省電：'+(save.eco?'開':'關'));
+  refreshCoins();
 }
-function showResult(){
+function renderResult(){
   showHUD(false);
   const st=curStage();
   $('r-title').textContent=G.si===-1?'修行完成':(G.win?(st.boss?'打倒大蛤蟆！':'過關！'):'再接再厲');
   let s='';if(G.si!==-1)for(let i=0;i<3;i++)s+='<span class="'+(i<G.stars?'':'off')+'" style="animation-delay:'+(i*.25)+'s">★</span>';
   $('r-stars').innerHTML=s;
   $('r-score').textContent=G.score+' 分';
+  setCoinLine();
   const tg=G.target&&!(st&&st.boss)&&G.si>=0?'　目標 '+G.target:'';
-  $('r-sub').textContent=(G.newBest&&G.score>0?'新紀錄！':'最高 '+G.best)+'　難度：'+DIFF[G.diff].name+tg;
-  $('r-name').value=save.name||'';
+  $('r-sub').textContent=(G.newBest&&G.score>0?'新紀錄！':'最高 '+G.best)+'　難度：'+DIFF[G.diff].name+tg+(G.rank?'　榜上第 '+G.rank+' 名':'');
   const nx=G.si>=0&&G.win&&G.si+1<STAGES.length;
   $('r-next').hidden=!nx;
   $('r-card').hidden=!(G.win||G.si===-1);
@@ -758,12 +1039,20 @@ $('r-card').onclick=makeCard;
 $('r-stages').onclick=()=>{G.run='idle';renderStages();showScreen('sc-stages')};
 $('r-menu').onclick=toMenu;
 $('card-close').onclick=()=>showScreen('sc-result');
-$('r-name').addEventListener('input',e=>{save.name=e.target.value.slice(0,8);persist()});
+$('n-name').addEventListener('input',e=>{save.name=e.target.value.slice(0,8);persist()});
+$('n-name').addEventListener('focus',()=>{setTimeout(()=>scrollTo(0,0),300)});
 document.querySelectorAll('.tg-mute').forEach(b=>b.onclick=()=>{save.mute=!save.mute;persist();syncUI()});
 document.querySelectorAll('.tg-eco').forEach(b=>b.onclick=()=>{save.eco=!save.eco;persist();syncUI()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame()});
-addEventListener('resize',()=>{layout();if(innerHeight>innerWidth)pauseGame()});
-addEventListener('orientationchange',()=>setTimeout(()=>{layout();if(innerHeight>innerWidth)pauseGame()},200));
+let rzT=0;
+function typing(){const a=document.activeElement;return a&&a.tagName==='INPUT'}
+function relayout(){if(typing())return;layout();if(innerHeight>innerWidth)pauseGame()}
+addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(relayout,90)});
+addEventListener('orientationchange',()=>{[150,500,1100].forEach(t=>setTimeout(relayout,t))});
+[300,900,2000].forEach(t=>setTimeout(relayout,t));
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(relayout,90)});
+$('n-name').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
+$('n-name').addEventListener('blur',()=>{scrollTo(0,0);setTimeout(()=>{scrollTo(0,0);layout()},120)});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{bgs.length=0});
 
 let lastTs=0;
@@ -772,7 +1061,7 @@ function frame(ts){
   if(ts-lastTs<(save.eco?32:15))return;
   const dt=Math.min(.05,(ts-lastTs)/1000);lastTs=ts;
   if(G.run!=='pause')update(dt);else ptrsFadeCleanup();
-  draw(ts/1000);updateHUD();
+  draw(ts/1000);updateHUD();if(!$('sc-shop').hidden)drawPreview(ts/1000);
 }
 G.diff=save.diff;
 layout();syncUI();showScreen('sc-title');showHUD(false);
