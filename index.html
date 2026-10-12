@@ -137,7 +137,7 @@ input{box-sizing:border-box;min-height:calc(46px / var(--s,1));font:800 26px/1 v
     <button data-d="easy">小忍者</button><button data-d="normal">忍者</button><button data-d="hard">上忍</button>
   </div>
   <p class="hint">用手指劃過水果。小心炸彈和手裡劍！</p>
-  <div class="corner" id="t-ver">v0.3</div>
+  <div class="corner" id="t-ver">v0.4</div>
   <div class="tgs"><button class="btn sm tg-mute"></button><button class="btn sm tg-eco"></button></div>
 </section>
 
@@ -389,13 +389,16 @@ const DRAW={
     g.fillStyle='#fff';[-1,1].forEach(s=>{g.beginPath();g.ellipse(s*rb*.38,oy-rb*.05,rb*.2,rb*.24,s*.2,0,7);g.fill()});
     g.fillStyle='#e0452f';[-1,1].forEach(s=>{g.beginPath();g.arc(s*rb*.34,oy,rb*.1,0,7);g.fill()});
     g.strokeStyle='#e0452f';g.lineWidth=4;[-1,1].forEach(s=>{g.beginPath();g.moveTo(s*rb*.62,oy-rb*.5);g.lineTo(s*rb*.14,oy-rb*.28);g.stroke()})},
+  ch(g,r,d){g.fillStyle='#8a5a2b';rr(g,-r*.9,-r*.55,r*1.8,r*1.15,6);g.fill();g.fillStyle='#a8723a';rr(g,-r*.9,-r*.55,r*1.8,r*.5,6);g.fill();
+    g.fillStyle='#f0bd3c';g.fillRect(-r*.9,-r*.12,r*1.8,r*.14);g.fillRect(-r*.1,-r*.55,r*.2,r*1.15);
+    g.fillStyle='#fff3b0';g.fillRect(-r*.1,-r*.18,r*.2,r*.24);g.strokeStyle='#4a2c10';g.lineWidth=3;rr(g,-r*.9,-r*.55,r*1.8,r*1.15,6);g.stroke()},
   sh(g,r,d){g.fillStyle=radial(g,r,'#e8eefc','#5a6278');g.strokeStyle='#2a2f3f';g.lineWidth=2.5;g.lineJoin='round';g.beginPath();
     for(let i=0;i<8;i++){const a=i*Math.PI/4-Math.PI/2,rr2=i%2?r*.3:r;g.lineTo(Math.cos(a)*rr2,Math.sin(a)*rr2)}
     g.closePath();g.fill();g.stroke();g.fillStyle='#1d2133';g.beginPath();g.arc(0,0,r*.16,0,7);g.fill()}
 };
 function buildAssets(){
   SPR={};
-  for(const d of ALLDEF){
+  for(const d of ALLDEF.concat([CHEST])){
     const n=Math.ceil((d.r*2+8)*SP),c=document.createElement('canvas');c.width=c.height=n;
     const g=c.getContext('2d');g.scale(SP,SP);g.translate(d.r+4,d.r+4);DRAW[d.k](g,d.r,d);SPR[d.k]=c;
   }
@@ -514,16 +517,16 @@ function unlocked(i){return i===0||location.hash==='#test'||((save.stage[i-1]&&s
 
 function resetRun(si){
   const d=DIFF[save.diff];
-  Object.assign(G,{run:'play',si,diff:save.diff,score:0,maxHearts:d.hearts+gl('amulet'),hearts:d.hearts+gl('amulet'),time:(si===-1?60:45)+gl('glass')*3,rank:0,coins:0,gauge:0,sliced:0,slow:0,dbl:0,
+  Object.assign(G,{run:'play',si,diff:save.diff,score:0,maxHearts:d.hearts+gl('amulet'),hearts:d.hearts+gl('amulet'),time:(si===-1?60:45)+gl('glass')*3,rank:0,coins:0,ev:null,evT:rand(9,14),giant:null,goldT:0,fwT:0,cloneT:0,cloneAcc:0,rainT:0,rainAcc:0,bonusCoins:0,gauge:0,sliced:0,slow:0,dbl:0,
     spawnT:.8,ready:1.3,shake:0,flash:0,slash:0,toadHit:0,toadOpen:0,spitT:2.2,spitQ:0,bossDown:false,endT:0,lost:0,win:false,stars:0,shown:1,target:0,best:0,newBest:false,reason:''});
   const st=curStage();
   if(st&&st.boss){G.bossMax=G.bossHp=d.boss;G.time=Infinity}
   else if(st)G.target=Math.round(st.base*d.tm);
-  objs=[];halves=[];parts=[];pops=[];queue=[];skillQ=[];banner=null;fakeP.n=0;fakeP.lt=-9;
+  objs=[];halves=[];parts=[];pops=[];queue=[];skillQ=[];banner=null;fakeP.n=0;fakeP.lt=-9;fxl.length=0;
 }
 function rollDef(noHaz){
   const dc=DIFF[G.diff];
-  if(!noHaz&&Math.random()<dc.haz)return Math.random()<.6?BOMB:STAR;
+  if(!noHaz&&!(G.goldT>0)&&Math.random()<(G.fwT>0?.5:dc.haz))return Math.random()<.6?BOMB:STAR;
   const r=Math.random();
   if(r<.06)return GOLD;if(r<.11)return ICE;return pick(FR);
 }
@@ -572,15 +575,17 @@ function slashSeg(a,b,p){
   if(G.run==='pause'||(G.run==='play'&&G.ready>0))return;
   if(Math.hypot(b.x-a.x,b.y-a.y)<4)return;
   const ang=Math.atan2(b.y-a.y,b.x-a.x);
-  for(const o of objs){if(!o.dead&&segDist(o.x,o.y,a.x,a.y,b.x,b.y)<=o.r+4+gl('blade')*3)sliceObj(o,ang,p)}
+  for(const o of objs){if(!o.dead&&!(o.safeT>G.t)&&segDist(o.x,o.y,a.x,a.y,b.x,b.y)<=o.r+4+gl('blade')*3)sliceObj(o,ang,p)}
+  if(G.giant&&G.run==='play')giantHit(a,b,p);
 }
 function sliceObj(o,ang,p){
   o.dead=true;const d=o.def,playing=G.run==='play';
-  if(d.hz){boom(o);if(playing)hurt();return}
+  if(d.hz){if(G.fwT>0&&playing){firework(o);return}boom(o);if(playing)hurt();return}
+  if(d.chest){if(playing)openChest(o);else juice(o.x,o.y,d,12);return}
   if(G.t-p.lt>.45)p.n=0;p.n++;p.lt=G.t;
   splitFruit(o,ang);sfxSlice();G.slash=.25;
   if(!playing)return;
-  const mul=G.dbl>0?2:1;let pts=(d.gold?50:10)*mul;
+  const mul=evMul();let pts=(d.gold?50:10)*mul;
   if(p.n>=2){pts+=10*(p.n-1)*mul;pop(o.x,o.y-34,'連切 ×'+p.n,'#f0bd3c',30);sfxCombo(p.n)}
   G.score+=pts;pop(o.x,o.y,'+'+pts,d.gold?'#f0bd3c':'#ffffff',d.gold?32:24);
   G.gauge=Math.min(100,G.gauge+((d.gold?20:7)+(p.n>1?3:0))*(1+.15*gl('scroll')));
@@ -612,6 +617,7 @@ function useSkill(){
   banner={t:1.2,max:1.2,txt:k.name,sub:'',col:k.col};
   G.flash=.35;G.flashC=k.col;fakeP.n=0;fakeP.lt=G.t;
   let i=0;for(const o of objs){if(!o.dead){skillQ.push({o,t:i*.05});i++}}
+  if(G.giant&&G.giant.state!=='out')for(let k=0;k<3&&G.giant;k++)giantStrike(G.giant.x,G.giant.y);
 }
 function finish(reason){
   if(G.run!=='play')return;
@@ -626,7 +632,7 @@ function finish(reason){
    let c;if(G.si===-1)c=Math.floor(G.score/15);
    else if(win)c=30+Math.floor(G.score/8)+stars*25+(first?80:0)+(st&&st.boss?150:0);
    else c=Math.floor(G.score/20);
-   c=Math.round(c*dm*(1+.1*gl('purse')));G.coins=c;save.coins=(save.coins||0)+c}
+   c=Math.round(c*dm*(1+.1*gl('purse')));c+=G.bonusCoins||0;G.coins=c;save.coins=(save.coins||0)+c;G.giant=null;G.goldT=G.fwT=G.cloneT=G.rainT=0}
   if(G.si===-1){G.best=save.train[G.diff]||0;G.newBest=G.score>G.best;if(G.newBest)save.train[G.diff]=G.score}
   else{
     const rec=save.stage[G.si]||(save.stage[G.si]={stars:0,best:{}});
@@ -672,8 +678,9 @@ function playUpdate(dt){
     if(q.t<=0){skillQ.splice(i,1);if(!q.o.dead){if(q.o.hz){q.o.dead=true;juice(q.o.x,q.o.y,q.o.def,8)}else sliceObj(q.o,rand(0,6.28),fakeP)}}
   }
   if(G.run!=='play')return;
+  eventUpdate(dt);
   G.spawnT-=dt;
-  if(G.spawnT<=0){spawnBurst();G.spawnT=rand(dc.gap[0],dc.gap[1])*(st?st.pace:1)*(boss?1.9:1)}
+  if(G.spawnT<=0){if(!(G.rainT>0))spawnBurst();G.spawnT=rand(dc.gap[0],dc.gap[1])*(st?st.pace:1)*(boss?1.9:1)*(G.goldT>0?.55:1)*(G.giant?1.6:1)}
   if(boss&&!G.bossDown){
     G.spitT-=dt;if(G.spitT<=0){G.spitT=dc.spit;G.toadOpen=.55;G.spitQ=.3}
     if(G.spitQ>0){G.spitQ-=dt;if(G.spitQ<=0)spitFruits()}
@@ -755,7 +762,7 @@ function confirmName(){
 }
 function setCoinLine(){$('r-coins').textContent='+'+(G.coins||0)+' 金幣　共 '+save.coins+' 金幣'}
 function refreshCoins(){
-  const t=$('t-ver');if(t)t.textContent='v0.3　金幣 '+save.coins;
+  const t=$('t-ver');if(t)t.textContent='v0.4　金幣 '+save.coins;
   const c=$('sh-coin');if(c)c.textContent='金幣 '+save.coins;
 }
 
@@ -877,8 +884,198 @@ $('bd-next').onclick=()=>stepMode(1);
 $('n-dice').onclick=()=>{audioInit();rollName();sfxCombo(3)};
 $('n-ok').onclick=confirmName;
 $('n-skip').onclick=renderResult;
+/* ===== surprise moments ===== */
+const fxl=[];
+const GW={k:'wm',r:92,skin:'#3f9a4a',flesh:'#ef4a5f'};
+const CHEST={k:'ch',r:34,skin:'#8a5a2b',flesh:'#f0bd3c',chest:1};
+const EVENTS={
+  rain:{txt:'水果雨！',sub:'10 秒，盡情切',col:'#7fd8ff'},
+  giant:{txt:'巨大西瓜！',sub:'連續切它，連擊越多獎勵越多',col:'#ff5a6a'},
+  gold:{txt:'黃金時刻！',sub:'6 秒，分數 ×3',col:'#f0bd3c'},
+  clone:{txt:'忍者分身！',sub:'6 秒，分身幫你切',col:'#c8b6ff'},
+  chest:{txt:'神秘寶箱！',sub:'快切開它',col:'#f0bd3c'},
+  fw:{txt:'煙火時間！',sub:'炸彈變煙火，放心切',col:'#ff8fb8'}
+};
+const CLONES=[[300,H-50],[560,H-50]];
+let lastEv='';
+function sfxEvent(){tone(440,.15,.2,'triangle');tone(660,.15,.2,'triangle',0,.1);tone(880,.3,.22,'triangle',0,.2)}
+const evMul=()=>(G.dbl>0?2:1)*(G.goldT>0?3:1);
+
+function startEvent(type){
+  if(!type){
+    const pool=['rain','giant','gold','clone','chest','fw'].filter(e=>e!==lastEv&&!(e==='fw'&&G.si===-1));
+    type=pick(pool);
+  }
+  lastEv=type;const e=EVENTS[type];
+  banner={t:1.4,max:1.4,txt:e.txt,sub:e.sub,col:e.col};sfxEvent();G.ev=type;
+  if(type==='rain'){G.rainT=10;G.rainAcc=0}
+  else if(type==='gold'){G.goldT=6}
+  else if(type==='clone'){G.cloneT=6;G.cloneAcc=.3}
+  else if(type==='fw'){G.fwT=8}
+  else if(type==='giant')startGiant();
+  else if(type==='chest'){launch(CHEST,false);G.ev=null;G.evT=rand(13,20)}
+}
+function evDone(){
+  switch(G.ev){
+    case 'rain':return G.rainT<=0;
+    case 'gold':return G.goldT<=0;
+    case 'clone':return G.cloneT<=0;
+    case 'fw':return G.fwT<=0;
+    case 'giant':return !G.giant;
+  }
+  return true;
+}
+function eventUpdate(dt){
+  if(G.rainT>0){G.rainT-=dt;G.rainAcc+=dt;while(G.rainAcc>.16){G.rainAcc-=.16;rainDrop()}}
+  if(G.goldT>0)G.goldT-=dt;
+  if(G.fwT>0)G.fwT-=dt;
+  if(G.cloneT>0){G.cloneT-=dt;G.cloneAcc-=dt;if(G.cloneAcc<=0){G.cloneAcc=.32;cloneStrike()}}
+  if(G.giant)giantUpdate(dt);
+  for(let i=fxl.length-1;i>=0;i--){fxl[i].t-=dt;if(fxl[i].t<=0)fxl.splice(i,1)}
+  if(G.ev){if(evDone()){G.ev=null;G.evT=rand(13,20)}}
+  else{G.evT-=dt;if(G.evT<=0)startEvent()}
+}
+function rainDrop(){
+  const d=rollDef(true);
+  objs.push({def:d,x:rand(50,W-50),y:-40,vx:rand(-40,40),vy:rand(20,140),r:d.r,rot:rand(0,6.28),vr:rand(-4,4),hz:false,dead:false});
+}
+function cloneStrike(){
+  const c=objs.filter(o=>!o.dead&&!o.def.hz&&o.y>30&&o.y<H-40);if(!c.length)return;
+  const o=pick(c),cp=pick(CLONES);
+  fxl.push({x0:cp[0],y0:cp[1]-60,x1:o.x,y1:o.y,t:.18});
+  sliceObj(o,Math.atan2(o.y-cp[1],o.x-cp[0]),fakeP);
+}
+
+/* ----- giant watermelon ----- */
+function startGiant(){
+  const hp={easy:5,normal:7,hard:9}[G.diff]||7,tx=rand(400,560);
+  G.giant={x:tx,y:H+120,tx,r:92,hp,max:hp,hits:0,combo:0,maxCombo:0,lastHit:-9,life:9,state:'in',pulse:0,vy:0,done:false};
+}
+function giantUpdate(dt){
+  const g=G.giant;g.pulse=Math.max(0,g.pulse-dt);
+  if(g.state==='in'){
+    g.y+=(236-g.y)*Math.min(1,dt*3.2);
+    if(Math.abs(g.y-236)<6)g.state='hover';
+  }else if(g.state==='hover'){
+    g.life-=dt;g.y=236+Math.sin(G.t*2.2)*10;g.x=g.tx+Math.sin(G.t*1.3)*30;
+    if(g.life<=0){g.state='out';g.vy=0;banner={t:1.2,max:1.2,txt:'西瓜跑掉了…',sub:'',col:'#e2d3ae'}}
+  }else{
+    g.vy+=900*dt;g.y+=g.vy*dt;if(g.y>H+170)G.giant=null;
+  }
+}
+function giantStrike(px,py){
+  const g=G.giant;if(!g||g.done||g.state==='out')return;
+  if(G.t-g.lastHit>1.3)g.combo=0;
+  g.lastHit=G.t;g.combo++;g.maxCombo=Math.max(g.maxCombo,g.combo);g.hp--;g.hits++;g.pulse=.16;
+  const pts=(15+5*g.combo)*evMul();G.score+=pts;
+  G.gauge=Math.min(100,G.gauge+4);G.shake=.1;
+  pop(px,py-20,'×'+g.combo,'#f0bd3c',34+Math.min(g.combo,10)*3);
+  sfxSlice();sfxCombo(g.combo);juice(px,py,GW,10);
+  if(g.hp<=0)giantFinale();
+}
+function giantHit(a,b,p){
+  const g=G.giant;if(!g||g.done||g.state==='out')return;
+  if(segDist(g.x,g.y,a.x,a.y,b.x,b.y)>g.r*.95){p.gAcc=-1;return}
+  const len=Math.hypot(b.x-a.x,b.y-a.y);
+  if(p.gAcc===undefined||p.gAcc<0||p.gAcc>=130){
+    if(G.t-g.lastHit<.08)return;
+    p.gAcc=0;giantStrike((a.x+b.x)/2,(a.y+b.y)/2);
+  }else p.gAcc+=len;
+}
+function giantFinale(){
+  const g=G.giant;g.done=true;
+  const bonus=(100+g.maxCombo*25)*evMul(),coins=10+g.maxCombo*4;
+  G.score+=bonus;G.bonusCoins+=coins;G.gauge=Math.min(100,G.gauge+30);
+  banner={t:1.9,max:1.9,txt:'西瓜爆破！',sub:g.maxCombo+' 連擊　+'+bonus+' 分　+'+coins+' 金幣',col:'#ff5a6a'};
+  G.flash=.5;G.flashC='#ff5a6a';G.shake=.5;sfxWin();sfxBomb();
+  for(const s of[-1,1])halves.push({def:GW,x:g.x,y:g.y,vx:s*220,vy:-160,rot:0,vr:s*2.2,la:-1.2,side:s,life:2.6});
+  juice(g.x,g.y,GW,save.eco?30:70);
+  for(let i=0;i<12;i++){
+    const d=i<2?GOLD:pick(FR);
+    objs.push({def:d,x:g.x+rand(-30,30),y:g.y+rand(-30,30),vx:rand(-420,420),vy:rand(-640,-200),r:d.r,rot:rand(0,6.28),vr:rand(-5,5),hz:false,dead:false,safeT:G.t+.4});
+  }
+  G.giant=null;
+}
+
+/* ----- fireworks, chest ----- */
+function firework(o){
+  const pts=30*evMul();G.score+=pts;
+  const cols=['#ff5a6a','#ffd54a','#5aff8a','#5ab4ff','#b58cff','#ff8fb8'];
+  for(let i=0;i<(save.eco?14:30);i++){const a=rand(0,6.28),s=rand(120,380);parts.push({x:o.x,y:o.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:260,life:rand(.5,1),max:1,r:rand(2.5,5.5),col:pick(cols)})}
+  pop(o.x,o.y,'+'+pts+' 煙火！','#ff8fb8',28);
+  tone(900+Math.random()*500,.3,.15,'sine',2200);noise(.2,3000,6000,.25);
+  G.gauge=Math.min(100,G.gauge+6);
+}
+function randomBless(){
+  const opts=[
+    ()=>{G.slow=6;return '慢動作 6 秒'},
+    ()=>{G.dbl=10;return '雙倍得分 10 秒'},
+    ()=>{if(G.si>=0&&G.hearts<G.maxHearts){G.hearts++;return '回復 1 顆愛心'}G.score+=100;return '加 100 分'},
+    ()=>{G.gauge=100;return '氣力全滿'}
+  ];
+  return pick(opts)();
+}
+function openChest(o){
+  sfxGold();juice(o.x,o.y,CHEST,20);
+  if(Math.random()<.6){
+    const c=irand(15,40);G.bonusCoins+=c;G.score+=50*evMul();
+    banner={t:1.6,max:1.6,txt:'金幣 +'+c,sub:'',col:'#f0bd3c'};
+  }else{
+    banner={t:1.8,max:1.8,txt:'寶箱祝福！',sub:randomBless(),col:'#f0bd3c'};
+  }
+  pop(o.x,o.y,'寶箱！','#f0bd3c',34);
+}
+
+/* ----- drawing ----- */
+function evAura(o){
+  if(G.goldT>0&&!o.def.hz){ctx.fillStyle='rgba(240,189,60,.3)';ctx.beginPath();ctx.arc(o.x,o.y,o.r+8,0,7);ctx.fill()}
+  if(G.fwT>0&&o.def.hz){ctx.strokeStyle='hsl('+((G.t*220+o.x)%360)+',100%,62%)';ctx.lineWidth=5;ctx.beginPath();ctx.arc(o.x,o.y,o.r+8,0,7);ctx.stroke()}
+}
+function drawGiant(ts){
+  const g=G.giant;if(!g)return;
+  const k=g.r/38,n=42*k,sc=1+g.pulse*2.2;
+  ctx.save();ctx.translate(g.x,g.y);ctx.scale(sc,sc);ctx.rotate(Math.sin(ts*2.4)*.05);
+  ctx.fillStyle='rgba(255,90,106,.22)';ctx.beginPath();ctx.arc(0,0,g.r+14,0,7);ctx.fill();
+  ctx.drawImage(SPR.wm,-n,-n,n*2,n*2);
+  ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+  for(let i=0;i<g.hits;i++){
+    const a=i*2.39+.4;ctx.beginPath();ctx.moveTo(Math.cos(a)*8,Math.sin(a)*8);
+    ctx.lineTo(Math.cos(a+.25)*g.r*.45,Math.sin(a+.25)*g.r*.45);
+    ctx.lineTo(Math.cos(a-.1)*g.r*.7,Math.sin(a-.1)*g.r*.7);
+    ctx.lineTo(Math.cos(a+.15)*g.r*.95,Math.sin(a+.15)*g.r*.95);ctx.stroke();
+  }
+  ctx.restore();
+  const w=170,x0=g.x-w/2,y0=g.y-g.r-34,fw=w*g.hp/g.max;
+  ctx.fillStyle='rgba(0,0,0,.5)';rr(ctx,x0,y0,w,14,7);ctx.fill();
+  if(fw>=14){ctx.fillStyle='#ff5a6a';rr(ctx,x0,y0,fw,14,7);ctx.fill()}
+  else if(fw>0){ctx.fillStyle='#ff5a6a';ctx.fillRect(x0+2,y0+2,fw,10)}
+  if(g.combo>1&&G.t-g.lastHit<1.3){
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='800 '+(44+Math.min(g.combo,12)*4)+'px '+FONT;ctx.lineWidth=8;
+    ctx.strokeStyle='rgba(18,20,31,.9)';ctx.strokeText('×'+g.combo+' 連擊',g.x,g.y+10);
+    ctx.fillStyle='#f0bd3c';ctx.fillText('×'+g.combo+' 連擊',g.x,g.y+10);
+  }
+}
+function drawEventsBack(ts){
+  if(G.cloneT>0){
+    for(const c of CLONES){ctx.save();ctx.globalAlpha=.55;drawNinja(ctx,c[0],c[1]+6,ts+c[0],.1,'#c8b6ff');ctx.restore()}
+  }
+  drawGiant(ts);
+}
+function drawEventsFront(){
+  if(G.goldT>0){
+    ctx.fillStyle='rgba(240,189,60,'+(.06+.03*Math.sin(G.t*10))+')';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(240,189,60,.6)';ctx.lineWidth=8;ctx.strokeRect(4,4,W-8,H-8);
+  }
+  if(G.rainT>0){ctx.fillStyle='rgba(127,216,255,.07)';ctx.fillRect(0,0,W,H)}
+  if(G.fwT>0){ctx.strokeStyle='hsla('+((G.t*120)%360)+',100%,65%,.5)';ctx.lineWidth=6;ctx.strokeRect(3,3,W-6,H-6)}
+  for(const f of fxl){
+    const a=f.t/.18;ctx.strokeStyle='rgba(255,255,255,'+a+')';ctx.lineWidth=6*a+1;
+    ctx.beginPath();ctx.moveTo(f.x0,f.y0);ctx.lineTo(f.x1,f.y1);ctx.stroke();
+  }
+}
 /* ===== drawing ===== */
-function drawObj(o){
+function drawObj(o){evAura(o);
   const s=SPR[o.def.k],n=o.def.r+4;
   if(o.def.gold){ctx.fillStyle='rgba(240,189,60,.28)';ctx.beginPath();ctx.arc(o.x,o.y,o.r+9,0,7);ctx.fill()}
   if(o.def.ice){ctx.fillStyle='rgba(159,220,242,.28)';ctx.beginPath();ctx.arc(o.x,o.y,o.r+9,0,7);ctx.fill()}
@@ -914,6 +1111,7 @@ function draw(ts){
   const st=curStage();
   if(st&&st.boss&&G.run!=='idle')drawToad(ctx,ts);
   drawNinja(ctx,88,H-44,ts,G.slash);
+  drawEventsBack(ts);
   for(const h of halves)drawHalf(h);
   for(const o of objs)drawObj(o);
   for(const p of parts){ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
@@ -921,6 +1119,7 @@ function draw(ts){
   ctx.restore();
   drawTrails();
   if(G.slow>0){ctx.fillStyle='rgba(120,200,255,.12)';ctx.fillRect(0,0,W,H)}
+  drawEventsFront();
   if(G.flash>0){ctx.globalAlpha=clamp(G.flash*1.4,0,.42);ctx.fillStyle=G.flashC;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1}
   ctx.textAlign='center';ctx.textBaseline='middle';
   for(const p of pops){
@@ -956,13 +1155,13 @@ function updateHUD(){
   $('h-boss').hidden=!boss;
   if(boss){const w=(G.bossHp/Math.max(1,G.bossMax)*100).toFixed(1)+'%';if(hud.bw!==w){hud.bw=w;$('h-bossfill').style.width=w}}
   const g=Math.round(G.gauge);if(hud.g!==g){hud.g=g;$('b-skill').style.setProperty('--g',g);$('b-skill').classList.toggle('ready',g>=100)}
-  const dbl=G.dbl>0;if(hud.dbl!==dbl){hud.dbl=dbl;$('h-dbl').hidden=!dbl}
+  const dbl=G.goldT>0?'×3':(G.dbl>0?'×2':'');if(hud.dbl!==dbl){hud.dbl=dbl;$('h-dbl').hidden=!dbl;$('h-dbl').textContent=dbl}
 }
 
 /* ===== screens ===== */
 function showScreen(id){for(const s of document.querySelectorAll('.screen'))s.hidden=(s.id!==id)}
 function showHUD(on){$('hud').hidden=!on;if(on)for(const k in hud)delete hud[k]}
-function toMenu(){G.run='idle';objs=[];halves=[];parts=[];pops=[];queue=[];skillQ=[];banner=null;G.si=-1;showHUD(false);showScreen('sc-title')}
+function toMenu(){G.run='idle';G.giant=null;G.goldT=G.fwT=G.cloneT=G.rainT=0;fxl.length=0;objs=[];halves=[];parts=[];pops=[];queue=[];skillQ=[];banner=null;G.si=-1;showHUD(false);showScreen('sc-title')}
 function startRun(si){resetRun(si);showScreen(null);showHUD(true);audioInit()}
 function pauseGame(){if(G.run!=='play')return;G.run='pause';showScreen('sc-pause')}
 function resumeGame(){if(G.run!=='pause')return;G.run='play';showScreen(null)}
