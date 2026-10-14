@@ -137,7 +137,7 @@ input{box-sizing:border-box;min-height:calc(46px / var(--s,1));font:800 26px/1 v
     <button data-d="easy">小忍者</button><button data-d="normal">忍者</button><button data-d="hard">上忍</button>
   </div>
   <p class="hint">用手指劃過水果。小心炸彈和手裡劍！</p>
-  <div class="corner" id="t-ver">v0.4</div>
+  <div class="corner" id="t-ver">v0.5</div>
   <div class="tgs"><button class="btn sm tg-mute"></button><button class="btn sm tg-eco"></button></div>
 </section>
 
@@ -335,11 +335,11 @@ document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>e.preventDefault());
 /* ===== art: fruit sprites, backgrounds, ninja, toad ===== */
 const FR=[
-  {k:'wm',r:38,skin:'#3f9a4a',flesh:'#ef4a5f'},
-  {k:'or',r:31,skin:'#f59a23',flesh:'#ffc04d'},
-  {k:'ap',r:31,skin:'#d9302f',flesh:'#fff1c9'},
-  {k:'le',r:30,skin:'#f3d93a',flesh:'#fff5a8'},
-  {k:'pi',r:33,skin:'#f0b43c',flesh:'#fff08a'},
+  {k:'wm',r:56,skin:'#3f9a4a',flesh:'#ef4a5f'},
+  {k:'or',r:35,skin:'#f59a23',flesh:'#ffc04d'},
+  {k:'ap',r:28,skin:'#d9302f',flesh:'#fff1c9'},
+  {k:'le',r:25,skin:'#f3d93a',flesh:'#fff5a8'},
+  {k:'pi',r:43,skin:'#f0b43c',flesh:'#fff08a'},
   {k:'pe',r:31,skin:'#f6a6a0',flesh:'#ffe3c2'}
 ];
 const GOLD={k:'go',r:32,skin:'#f6c93a',flesh:'#fff3b0',gold:1};
@@ -370,7 +370,7 @@ const DRAW={
     leaf(g,r*.34,-r*.9,r*.3,r*.12,-.4);hl(g,r)},
   le(g,r,d){body(g,r,d,r,r*.8);g.fillStyle=d.skin;[-1,1].forEach(s=>{g.beginPath();g.arc(s*r*.98,0,r*.12,0,7);g.fill()});hl(g,r)},
   pi(g,r,d){body(g,r,d,r*.78,r*.88,r*.12);g.save();g.beginPath();g.ellipse(0,r*.12,r*.78,r*.88,0,0,7);g.clip();g.strokeStyle='rgba(120,70,0,.45)';g.lineWidth=2;
-    for(let i=-4;i<=4;i++){g.beginPath();g.moveTo(i*14-40,-r);g.lineTo(i*14+40,r*1.1);g.stroke();g.beginPath();g.moveTo(i*14+40,-r);g.lineTo(i*14-40,r*1.1);g.stroke()}
+    for(let i=-4;i<=4;i++){g.beginPath();g.moveTo(i*r*.42-r*1.2,-r);g.lineTo(i*r*.42+r*1.2,r*1.1);g.stroke();g.beginPath();g.moveTo(i*r*.42+r*1.2,-r);g.lineTo(i*r*.42-r*1.2,r*1.1);g.stroke()}
     g.restore();g.fillStyle='#3f9a3f';
     for(let i=-2;i<=2;i++){g.beginPath();g.moveTo(i*r*.14-r*.1,-r*.6);g.lineTo(i*r*.3,-r*1.0+Math.abs(i)*r*.1);g.lineTo(i*r*.14+r*.1,-r*.6);g.closePath();g.fill()}
     hl(g,r)},
@@ -762,7 +762,7 @@ function confirmName(){
 }
 function setCoinLine(){$('r-coins').textContent='+'+(G.coins||0)+' 金幣　共 '+save.coins+' 金幣'}
 function refreshCoins(){
-  const t=$('t-ver');if(t)t.textContent='v0.4　金幣 '+save.coins;
+  const t=$('t-ver');if(t)t.textContent='v0.5　金幣 '+save.coins;
   const c=$('sh-coin');if(c)c.textContent='金幣 '+save.coins;
 }
 
